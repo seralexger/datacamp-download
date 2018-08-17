@@ -12,6 +12,11 @@ There is a simple practical example in dataCamp_download.py, for download your c
 ```
 python dataCamp_download.py -u user_datacamp -p pass_datacamp -q course_url
 ```
+
+course_url sample
+```
+https://www.datacamp.com/courses/intro-to-python-for-data-science
+```
 This command will create a directory structure where you will find the chapters of the course and its source code.
 
 
