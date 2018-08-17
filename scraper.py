@@ -117,7 +117,7 @@ class DataCamp:
 
 	def create_source(self, course_url, chapter_number, chapter_name, exercise_number,exercise_name, data, sub=False):
 		course_name = course_url.split('/')[-1]
-		chapter_directory = 'courses/'+course_name+'/chapters/'+str(chapter_number)+'_'+chapter_name
+		chapter_directory = 'courses/'+course_name+'/chapters/'+str(chapter_number)+'_'+chapter_name.replace('/', '_')
 		if not os.path.exists('courses/'+course_name):
 			os.makedirs('courses/'+course_name)
 		if not os.path.exists(chapter_directory):
@@ -131,7 +131,7 @@ class DataCamp:
 					to_write = item['last_attempt']
 				aux += '\n'+'\n'+'#'+exercise_name+' subexercise '+str(index)+'\n'+'\n'+ to_write
 			data = aux
-		with open(chapter_directory+'/'+str(exercise_number)+'_'+exercise_name+'.py', 'w') as f:
+		with open(chapter_directory+'/'+str(exercise_number)+'_'+exercise_name.replace('/', '_')+'.py', 'w') as f:
 			f.write(data)
 
 
