@@ -7,7 +7,7 @@ All the necesary libraries for run the project are in the requirements.txt.
 
 ### Use of the class
 
-There is a simple practical example in dataCamp_download.py, for download your course code, you must have completed the course.
+There is a simple practical example in dataCamp_download.py, for download your course code, you must have completed the course. This command will create a directory structure where you will find the chapters of the course and its source code.
 
 ```
 python dataCamp_download.py -u user_datacamp -p pass_datacamp -q course_url
@@ -17,7 +17,6 @@ course_url sample
 ```
 https://www.datacamp.com/courses/intro-to-python-for-data-science
 ```
-This command will create a directory structure where you will find the chapters of the course and its source code.
 
 Exercise source code file example
 ```
