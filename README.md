@@ -19,6 +19,44 @@ https://www.datacamp.com/courses/intro-to-python-for-data-science
 ```
 This command will create a directory structure where you will find the chapters of the course and its source code.
 
+Exercise source code file example
+```
+#COMPARING A HISTOGRAM AND DISTPLOT
+
+#STATEMENT
+'''
+The pandas library supports simple plotting of data, which is very convenient when data
+is already likely to be in a pandas DataFrame.
+
+'''
+
+#INSTRUCTIONS
+'''
+Use the pandas' plot.hist() function to plot a histogram of the Award_Amount column.
+'''
+
+#EXERCISE SOURCE CODE
+
+
+#Comparing a histogram and distplot subexercise 0
+
+# Display pandas histogram
+df['Award_Amount'].plot.hist()
+plt.show()
+
+# Clear out the pandas histogram
+plt.clf()
+
+#Comparing a histogram and distplot subexercise 1
+
+# Display a Seaborn distplot
+sns.distplot(df['Award_Amount'])
+plt.show()
+
+# Clear the distplot
+plt.clf()
+```
+
 
 ## TODO
 
