@@ -79,7 +79,6 @@ class DataCamp:
 			if 'interactive' in exercise_li.xpath('.//img/@alt')[0]:
 				exercise_dic = {}
 				exercise_dic['url'] = exercise_li.xpath('.//a/@href')[0]
-				#exercise_dic['url_data'] = 'https://campus-api.datacamp.com/api/courses/'+course_id+'/chapters/'+exercise_id+'/progress'
 				exercise_dic['title'] = exercise_li.xpath('.//h5[@class="chapter__exercise-title"]/@title')[0]
 				
 				return exercise_dic
