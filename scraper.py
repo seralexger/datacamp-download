@@ -115,9 +115,29 @@ class DataCamp:
 		return chapter_arr
 
 
-	def create_source(self, course_url, chapter_number, chapter_name, exercise_number,exercise_name, data, sub=False):
+	def exercise_statement(self, exercise_url):
+
+		CLEAN_RE = re.compile(r'<[^>]+>')
+
+		def clean_txt(text):
+
+		    return CLEAN_RE.sub('', text)
+
+		r = self.session.get(exercise_url)
+		tree = html.fromstring(r.content)
+		title = tree.xpath('//div[@class="exercise--assignment exercise--typography"]')[0].xpath('.//h1/text()')[0]
+		statement = clean_txt(etree.tostring(tree.xpath('//div[@class="exercise--assignment exercise--typography"]')[0].xpath('.//p')[0]).decode("utf-8").strip())
+		instructions = [clean_txt(etree.tostring(x).decode("utf-8").strip()) for x in tree.xpath('//div[@class="exercise--instructions exercise--typography"]')[0].xpath('.//ul/li')]
+
+		return title, statement, instructions
+
+
+
+	def create_source(self, course_url, chapter_number, chapter_name, exercise_number, exercise_name, data, exercise_url, sub=False):
 		course_name = course_url.split('/')[-1]
 		chapter_directory = 'courses/'+course_name+'/chapters/'+str(chapter_number)+'_'+chapter_name.replace('/', '_')
+		ex_title, ex_statement, ex_instructions = self.exercise_statement(exercise_url)
+		ex_template = "#{}\n\n#STATEMENT\n'''\n{}\n'''\n\n#INSTRUCTIONS\n'''\n{}\n'''\n\n#EXERCISE SOURCE CODE\n{}"
 		if not os.path.exists('courses/'+course_name):
 			os.makedirs('courses/'+course_name)
 		if not os.path.exists(chapter_directory):
@@ -131,8 +151,8 @@ class DataCamp:
 					to_write = item['last_attempt']
 				aux += '\n'+'\n'+'#'+exercise_name+' subexercise '+str(index)+'\n'+'\n'+ to_write
 			data = aux
-		with open(chapter_directory+'/'+str(exercise_number)+'_'+exercise_name.replace('/', '_')+'.py', 'w') as f:
-			f.write(data)
+		with open(chapter_directory+'/'+str(exercise_number)+'_'+exercise_name.replace('/','_')+'.py', 'w') as f:
+			f.write(ex_template.format(ex_title.upper(), ex_statement.replace('.', '.\n'), '\n'.join(ex_instructions), data))
 
 
 	def download_course_source(self, course_url):
@@ -140,9 +160,7 @@ class DataCamp:
 		for item in data:
 			for idx, ex in enumerate(item['exercises']):
 				if len(ex['data']['subexercises']) == 0:
-					self.create_source(course_url, item['number'], item['name'], idx, ex['title'], ex['data']['last_attempt'], sub=False)
+					self.create_source(course_url, item['number'], item['name'], idx, ex['title'], ex['data']['last_attempt'], ex['url'], sub=False)
 				else:
-					self.create_source(course_url, item['number'], item['name'], idx, ex['title'], ex['data']['subexercises'], sub=True)
-
-
+					self.create_source(course_url, item['number'], item['name'], idx, ex['title'], ex['data']['subexercises'], ex['url'], sub=True)
 
