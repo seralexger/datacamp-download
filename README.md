@@ -22,5 +22,4 @@ This command will create a directory structure where you will find the chapters 
 
 ## TODO
 
-#### Get statements of the exercices
 #### Get requirements.txt of the chapter
