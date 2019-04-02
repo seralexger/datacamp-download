@@ -35,7 +35,7 @@ class DataCamp:
 			os.makedirs('courses/courses_data')
 
 		self.session.headers.update({'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'})
-		r = self.session.get('https://www.datacamp.com/')
+		r = self.session.get('https://www.datacamp.com/users/sign_in')
 		tree = html.fromstring(r.content)
 		authenticity_token = tree.xpath('//input[@name="authenticity_token"]/@value')[0]
 		user_sign = self.sign_in(user_email, user_pass, authenticity_token)
@@ -91,7 +91,7 @@ class DataCamp:
 
 			r = self.session.get(course_url)
 			tree = html.fromstring(r.content)
-			chapters = tree.xpath('//ol[@class="chapters"]/li[@class="chapter"]')
+			chapters = tree.xpath('//ol[@class="chapters chapters--single-column"]/li[@class="chapter"]')
 			course_id = re.search(r'tion/course_(.*?)/shields/', r.text).group(1)
 			exercise_ids = tree.xpath('//span[@class="js-mobile-progress-container js-mobile-chapter-progress"]/@data-id')
 			datasets_url = tree.xpath('//ul[@class="course__datasets"]/li/a/@href')
@@ -126,8 +126,10 @@ class DataCamp:
 		tree = html.fromstring(r.content)
 		title = tree.xpath('//div[@class="exercise--assignment exercise--typography"]')[0].xpath('.//h1/text()')[0]
 		statement = clean_txt(etree.tostring(tree.xpath('//div[@class="exercise--assignment exercise--typography"]')[0].xpath('.//p')[0]).decode("utf-8").strip())
-		instructions = [clean_txt(etree.tostring(x).decode("utf-8").strip()) for x in tree.xpath('//div[@class="exercise--instructions exercise--typography"]')[0].xpath('.//ul/li')]
-
+		try:
+			instructions = [clean_txt(etree.tostring(x).decode("utf-8").strip()) for x in tree.xpath('//div[@class="exercise--instructions exercise--typography"]')[0].xpath('.//ul/li')]
+		except:
+			instructions = [clean_txt(etree.tostring(x).decode("utf-8").strip()) for x in tree.xpath('//div[@class="exercise--instructions"]/div[@class="exercise--typography"]')[0].xpath('.//ul/li')]
 		return title, statement, instructions
 
 
